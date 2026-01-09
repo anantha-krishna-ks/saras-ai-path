@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import SubjectChapters from "./pages/SubjectChapters";
 import LearningReadiness from "./pages/LearningReadiness";
 import ConceptMap from "./pages/ConceptMap";
 import ConceptHome from "./pages/ConceptHome";
@@ -23,6 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/subject/:subjectId" element={<SubjectChapters />} />
           <Route path="/readiness/:subjectId" element={<LearningReadiness />} />
           <Route path="/concept-map/:subjectId" element={<ConceptMap />} />
           <Route path="/concept/:conceptId" element={<ConceptHome />} />

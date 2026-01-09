@@ -53,7 +53,7 @@ const LoginForm = () => {
     <>
       <motion.form
         onSubmit={handleSubmit}
-        className="space-y-5"
+        className="space-y-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}

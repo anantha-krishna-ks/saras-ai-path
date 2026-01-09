@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { BookOpen, Brain, Lightbulb, Target } from "lucide-react";
+import { BookOpen, GraduationCap, Lightbulb, Target } from "lucide-react";
 
 const HeroIllustration = () => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      {/* Central brain/book illustration */}
+      {/* Central illustration */}
       <motion.div
         className="relative"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -36,7 +36,7 @@ const HeroIllustration = () => {
               ease: "easeInOut",
             }}
           >
-            <Brain className="w-20 h-20 text-white/90" />
+            <GraduationCap className="w-20 h-20 text-white/90" />
           </motion.div>
 
           {/* Orbiting elements - more subtle */}

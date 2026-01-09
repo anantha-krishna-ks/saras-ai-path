@@ -37,27 +37,6 @@ const Index = () => {
               Your personalized learning companion that adapts to your pace, style, and goals.
             </p>
 
-            {/* Feature highlights */}
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              {[
-                { label: "Personalized", value: "100%" },
-                { label: "Students", value: "50K+" },
-                { label: "Courses", value: "500+" },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  className="text-center"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                >
-                  <div className="text-2xl xl:text-3xl font-bold text-primary">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </motion.div>
 

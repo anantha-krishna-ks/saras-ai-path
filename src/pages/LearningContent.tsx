@@ -59,10 +59,10 @@ const LearningContent = () => {
   const [completedSlides, setCompletedSlides] = useState<number[]>([]);
 
   const modes = [
-    { id: "comic" as ContentMode, name: "Story", icon: BookOpen },
-    { id: "video" as ContentMode, name: "Video", icon: PlayCircle },
-    { id: "activity" as ContentMode, name: "Activity", icon: Layers },
-    { id: "flashcards" as ContentMode, name: "Cards", icon: CreditCard },
+    { id: "comic" as ContentMode, name: "Story", icon: BookOpen, emoji: "📖", description: "Visual narrative", recommended: true },
+    { id: "video" as ContentMode, name: "Video", icon: PlayCircle, emoji: "🎬", description: "Watch & learn", recommended: false },
+    { id: "activity" as ContentMode, name: "Activity", icon: Layers, emoji: "🎮", description: "Hands-on practice", recommended: false },
+    { id: "flashcards" as ContentMode, name: "Cards", icon: CreditCard, emoji: "🃏", description: "Quick review", recommended: false },
   ];
 
   const handleNext = () => {
@@ -137,26 +137,66 @@ const LearningContent = () => {
       <div className="flex-1 flex">
         {/* Main Content Area */}
         <main className="flex-1 max-w-4xl mx-auto px-6 py-8">
-          {/* Mode Switcher */}
+          {/* Mode Switcher - Card Grid */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 mb-8"
+            className="mb-8"
           >
-            {modes.map((mode) => (
-              <button
-                key={mode.id}
-                onClick={() => setActiveMode(mode.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  activeMode === mode.id
-                    ? "bg-primary text-white"
-                    : "bg-white border border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
-                }`}
-              >
-                <mode.icon className="w-4 h-4" />
-                {mode.name}
-              </button>
-            ))}
+            <p className="text-sm text-muted-foreground mb-3 font-medium">Choose how you'd like to learn:</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {modes.map((mode) => (
+                <motion.button
+                  key={mode.id}
+                  onClick={() => setActiveMode(mode.id)}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`relative flex flex-col items-center gap-2 p-4 rounded-xl transition-all duration-200 ${
+                    activeMode === mode.id
+                      ? "bg-primary/10 border-2 border-primary shadow-md"
+                      : "bg-white border-2 border-border/50 hover:border-primary/30 hover:shadow-sm"
+                  }`}
+                >
+                  {/* Recommended badge */}
+                  {mode.recommended && (
+                    <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                      ✨ Best
+                    </span>
+                  )}
+                  
+                  {/* Emoji icon */}
+                  <motion.span 
+                    className="text-2xl"
+                    animate={activeMode === mode.id ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {mode.emoji}
+                  </motion.span>
+                  
+                  {/* Name */}
+                  <span className={`text-sm font-semibold ${
+                    activeMode === mode.id ? "text-primary" : "text-foreground"
+                  }`}>
+                    {mode.name}
+                  </span>
+                  
+                  {/* Description */}
+                  <span className="text-[11px] text-muted-foreground">
+                    {mode.description}
+                  </span>
+                  
+                  {/* Active indicator */}
+                  {activeMode === mode.id && (
+                    <motion.div
+                      layoutId="activeMode"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
 
           {/* Content Display */}

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Clock, TrendingUp, ChevronRight, Sparkles, User, LogOut, Settings } from "lucide-react";
+import { BookOpen, Clock, TrendingUp, ChevronRight, ChevronDown, Sparkles, User, LogOut, Settings, CheckCircle2, Circle, PlayCircle } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import {
   DropdownMenu,
@@ -14,6 +14,13 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 
+interface Chapter {
+  id: string;
+  name: string;
+  status: "completed" | "in-progress" | "not-started";
+  duration: string;
+}
+
 interface Subject {
   id: string;
   name: string;
@@ -22,6 +29,7 @@ interface Subject {
   lastAccessed: string;
   conceptsCompleted: number;
   totalConcepts: number;
+  chapters: Chapter[];
 }
 
 const subjects: Subject[] = [
@@ -33,6 +41,13 @@ const subjects: Subject[] = [
     lastAccessed: "2 hours ago",
     conceptsCompleted: 5,
     totalConcepts: 12,
+    chapters: [
+      { id: "ch1", name: "Units and Measurements", status: "completed", duration: "45 min" },
+      { id: "ch2", name: "Motion in a Straight Line", status: "completed", duration: "1 hr" },
+      { id: "ch3", name: "Newton's Laws of Motion", status: "in-progress", duration: "1.5 hr" },
+      { id: "ch4", name: "Work, Energy and Power", status: "not-started", duration: "1 hr" },
+      { id: "ch5", name: "Gravitation", status: "not-started", duration: "1.5 hr" },
+    ],
   },
   {
     id: "chemistry",
@@ -42,6 +57,12 @@ const subjects: Subject[] = [
     lastAccessed: "Yesterday",
     conceptsCompleted: 3,
     totalConcepts: 10,
+    chapters: [
+      { id: "ch1", name: "Some Basic Concepts of Chemistry", status: "completed", duration: "40 min" },
+      { id: "ch2", name: "Structure of Atom", status: "completed", duration: "1 hr" },
+      { id: "ch3", name: "Classification of Elements", status: "in-progress", duration: "50 min" },
+      { id: "ch4", name: "Chemical Bonding", status: "not-started", duration: "1.5 hr" },
+    ],
   },
   {
     id: "biology",
@@ -51,6 +72,13 @@ const subjects: Subject[] = [
     lastAccessed: "3 days ago",
     conceptsCompleted: 6,
     totalConcepts: 10,
+    chapters: [
+      { id: "ch1", name: "The Living World", status: "completed", duration: "35 min" },
+      { id: "ch2", name: "Biological Classification", status: "completed", duration: "45 min" },
+      { id: "ch3", name: "Plant Kingdom", status: "completed", duration: "1 hr" },
+      { id: "ch4", name: "Animal Kingdom", status: "in-progress", duration: "1.5 hr" },
+      { id: "ch5", name: "Morphology of Plants", status: "not-started", duration: "1 hr" },
+    ],
   },
   {
     id: "mathematics",
@@ -60,11 +88,18 @@ const subjects: Subject[] = [
     lastAccessed: "1 week ago",
     conceptsCompleted: 2,
     totalConcepts: 8,
+    chapters: [
+      { id: "ch1", name: "Sets", status: "completed", duration: "40 min" },
+      { id: "ch2", name: "Relations and Functions", status: "in-progress", duration: "1 hr" },
+      { id: "ch3", name: "Trigonometric Functions", status: "not-started", duration: "1.5 hr" },
+      { id: "ch4", name: "Complex Numbers", status: "not-started", duration: "1 hr" },
+    ],
   },
 ];
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
   const [greeting] = useState(() => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good morning";
@@ -75,7 +110,41 @@ const Dashboard = () => {
   const { toast } = useToast();
 
   const handleSubjectClick = (subjectId: string) => {
-    navigate(`/readiness/${subjectId}`);
+    setExpandedSubject(expandedSubject === subjectId ? null : subjectId);
+  };
+
+  const handleChapterClick = (subjectId: string, chapterId: string) => {
+    navigate(`/readiness/${subjectId}?chapter=${chapterId}`);
+  };
+
+  const getStatusIcon = (status: Chapter["status"]) => {
+    switch (status) {
+      case "completed":
+        return <CheckCircle2 className="w-5 h-5 text-green-500" />;
+      case "in-progress":
+        return <PlayCircle className="w-5 h-5 text-primary" />;
+      default:
+        return <Circle className="w-5 h-5 text-muted-foreground/50" />;
+    }
+  };
+
+  const getStatusBadge = (status: Chapter["status"]) => {
+    switch (status) {
+      case "completed":
+        return (
+          <span className="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded-full">
+            Completed
+          </span>
+        );
+      case "in-progress":
+        return (
+          <span className="px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+            In Progress
+          </span>
+        );
+      default:
+        return null;
+    }
   };
 
   const handleLogout = () => {
@@ -233,50 +302,118 @@ const Dashboard = () => {
         >
           <h2 className="text-lg font-semibold text-foreground mb-4">Your Subjects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {subjects.map((subject, index) => (
-              <motion.button
-                key={subject.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-                onClick={() => handleSubjectClick(subject.id)}
-                className="bg-white rounded-xl p-5 border border-border/50 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 text-left group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-2xl">
-                      {subject.icon}
+            {subjects.map((subject, index) => {
+              const isExpanded = expandedSubject === subject.id;
+              return (
+                <motion.div
+                  key={subject.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                  className={`bg-white rounded-xl border shadow-sm transition-all duration-200 ${
+                    isExpanded ? "border-primary/30 shadow-md" : "border-border/50 hover:shadow-md hover:border-primary/20"
+                  }`}
+                >
+                  {/* Subject Header */}
+                  <button
+                    onClick={() => handleSubjectClick(subject.id)}
+                    className="w-full p-5 text-left group"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-2xl">
+                          {subject.icon}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                            {subject.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            {subject.chapters.length} chapters • {subject.conceptsCompleted} of {subject.totalConcepts} concepts
+                          </p>
+                        </div>
+                      </div>
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </motion.div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {subject.name}
-                      </h3>
+                    
+                    {/* Progress Bar */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Progress</span>
+                        <span className="font-medium text-foreground">{subject.progress}%</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-primary rounded-full transition-all duration-500"
+                          style={{ width: `${subject.progress}%` }}
+                        />
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                        {subject.conceptsCompleted} of {subject.totalConcepts} concepts
+                        Last accessed {subject.lastAccessed}
                       </p>
                     </div>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                
-                {/* Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="font-medium text-foreground">{subject.progress}%</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-500"
-                      style={{ width: `${subject.progress}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Last accessed {subject.lastAccessed}
-                  </p>
-                </div>
-              </motion.button>
-            ))}
+                  </button>
+
+                  {/* Chapters List */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-5 pb-5 pt-2 border-t border-border/50">
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
+                            Chapters
+                          </p>
+                          <div className="space-y-2">
+                            {subject.chapters.map((chapter, chapterIndex) => (
+                              <motion.button
+                                key={chapter.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.2, delay: chapterIndex * 0.05 }}
+                                onClick={() => handleChapterClick(subject.id, chapter.id)}
+                                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-left group/chapter ${
+                                  chapter.status === "in-progress"
+                                    ? "bg-primary/5 hover:bg-primary/10"
+                                    : "hover:bg-muted/50"
+                                }`}
+                              >
+                                {getStatusIcon(chapter.status)}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    <span className={`text-sm font-medium truncate ${
+                                      chapter.status === "completed" 
+                                        ? "text-muted-foreground" 
+                                        : "text-foreground group-hover/chapter:text-primary"
+                                    }`}>
+                                      {chapter.name}
+                                    </span>
+                                    {getStatusBadge(chapter.status)}
+                                  </div>
+                                  <span className="text-xs text-muted-foreground">
+                                    {chapter.duration}
+                                  </span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-muted-foreground/50 group-hover/chapter:text-primary group-hover/chapter:translate-x-1 transition-all" />
+                              </motion.button>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </main>

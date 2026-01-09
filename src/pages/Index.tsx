@@ -29,7 +29,7 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h2 className="text-3xl xl:text-4xl font-bold text-foreground leading-tight">
+            <h2 className="text-3xl xl:text-4xl font-semibold text-foreground leading-tight">
               Learn smarter, not harder with{" "}
               <span className="text-gradient">AI-powered</span> education
             </h2>
@@ -58,7 +58,7 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
+              <h1 className="text-3xl sm:text-4xl font-semibold text-foreground mb-2">
                 Welcome back! 👋
               </h1>
               <p className="text-muted-foreground mb-8">

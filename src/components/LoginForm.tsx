@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { User, Lock, LogIn } from "lucide-react";
 import LoginInput from "./ui/LoginInput";
 import LoginButton from "./ui/LoginButton";
@@ -7,13 +8,13 @@ import ForgotPasswordModal from "./ForgotPasswordModal";
 import { useToast } from "@/hooks/use-toast";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
   const { toast } = useToast();
-
   const validateForm = () => {
     const newErrors: { username?: string; password?: string } = {};
 
@@ -47,6 +48,9 @@ const LoginForm = () => {
       title: "Welcome back! 🎉",
       description: "You've successfully logged in to Saras School AI Learner.",
     });
+
+    // Navigate to dashboard after successful login
+    navigate("/dashboard");
   };
 
   return (

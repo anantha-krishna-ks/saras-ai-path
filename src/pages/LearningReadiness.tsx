@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CheckCircle2, Lightbulb, Brain } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
-
+import ConfidenceSlider from "@/components/learning/ConfidenceSlider";
 interface Question {
   id: number;
   question: string;
@@ -285,25 +285,11 @@ const LearningReadiness = () => {
                   ✨ Be honest — this helps us adjust the learning path just for you!
                 </p>
 
-                <div className="space-y-8">
-                  <div className="space-y-4">
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={confidence}
-                      onChange={(e) => setConfidence(parseInt(e.target.value))}
-                      className="w-full h-3 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
-                      style={{
-                        background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${confidence}%, hsl(var(--muted)) ${confidence}%, hsl(var(--muted)) 100%)`,
-                      }}
-                    />
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Not confident</span>
-                      <span className="font-semibold text-primary text-lg">{confidence}%</span>
-                      <span className="text-muted-foreground">Very confident</span>
-                    </div>
-                  </div>
+                <div className="space-y-6">
+                  <ConfidenceSlider 
+                    value={confidence} 
+                    onChange={setConfidence} 
+                  />
 
                   <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-xl p-6 border border-primary/10">
                     <p className="text-muted-foreground">

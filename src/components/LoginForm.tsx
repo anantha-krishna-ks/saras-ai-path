@@ -96,21 +96,6 @@ const LoginForm = () => {
             Sign In
           </span>
         </LoginButton>
-
-        <div className="relative py-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="px-4 bg-white text-sm text-muted-foreground">
-              New to Saras School?
-            </span>
-          </div>
-        </div>
-
-        <LoginButton type="button" variant="secondary">
-          Create an Account
-        </LoginButton>
       </motion.form>
 
       <ForgotPasswordModal

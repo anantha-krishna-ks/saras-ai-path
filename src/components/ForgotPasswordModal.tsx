@@ -84,7 +84,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
               {!isSuccess ? (
                 <>
                   <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">
+                    <h2 className="text-2xl font-semibold text-foreground">
                       Forgot Password?
                     </h2>
                     <p className="mt-2 text-muted-foreground">
@@ -131,7 +131,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
                   >
                     <CheckCircle2 className="w-8 h-8 text-green-600" />
                   </motion.div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     Check your inbox!
                   </h3>
                   <p className="text-muted-foreground mb-6">

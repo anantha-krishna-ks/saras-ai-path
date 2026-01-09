@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Clock, TrendingUp, ChevronRight, Sparkles } from "lucide-react";
+import { BookOpen, Clock, TrendingUp, ChevronRight, Sparkles, User, LogOut, Settings } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
 
 interface Subject {
   id: string;
@@ -62,8 +72,18 @@ const Dashboard = () => {
     return "Good evening";
   });
 
+  const { toast } = useToast();
+
   const handleSubjectClick = (subjectId: string) => {
     navigate(`/readiness/${subjectId}`);
+  };
+
+  const handleLogout = () => {
+    toast({
+      title: "Logged out successfully",
+      description: "See you next time, Ananya!",
+    });
+    navigate("/");
   };
 
   return (
@@ -72,11 +92,42 @@ const Dashboard = () => {
       <header className="border-b border-border/50 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <BrandLogo />
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-semibold text-sm">AS</span>
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-full transition-all hover:scale-105">
+                <Avatar className="h-10 w-10 cursor-pointer border-2 border-transparent hover:border-primary/30 transition-all">
+                  <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
+                    AS
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-white shadow-lg border border-border/50">
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium text-foreground">Ananya Sharma</p>
+                  <p className="text-xs text-muted-foreground">ananya@school.edu</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                <User className="w-4 h-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                onClick={handleLogout}
+                className="cursor-pointer flex items-center gap-2 text-destructive focus:text-destructive"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 

@@ -32,10 +32,10 @@ const LoginInput = forwardRef<HTMLInputElement, LoginInputProps>(
             <div
               className={cn(
                 "absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200",
-                isFocused ? "text-primary" : "text-muted-foreground"
+                isFocused ? "text-primary" : "text-foreground/60"
               )}
             >
-              <Icon size={20} />
+              <Icon size={20} strokeWidth={2} />
             </div>
           )}
           <input

@@ -13,8 +13,8 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        sans: ["Space Grotesk", "system-ui", "sans-serif"],
+fontFamily: {
+        sans: ["Open Sans", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

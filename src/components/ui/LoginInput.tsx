@@ -31,11 +31,11 @@ const LoginInput = forwardRef<HTMLInputElement, LoginInputProps>(
           {Icon && (
             <div
               className={cn(
-                "absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200",
-                isFocused ? "text-primary" : "text-foreground/60"
+                "absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 z-10",
+                isFocused ? "text-primary" : "text-slate-500"
               )}
             >
-              <Icon size={20} strokeWidth={2} />
+              <Icon size={20} strokeWidth={2.5} />
             </div>
           )}
           <input

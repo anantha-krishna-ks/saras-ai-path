@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight, MessageSquare, TrendingUp, CheckCircle2, Sparkles } from "lucide-react";
+import confetti from "canvas-confetti";
 import BrandLogo from "@/components/BrandLogo";
 
 const reflectionPrompts = [
@@ -10,14 +11,53 @@ const reflectionPrompts = [
   "How would you explain inertia to a friend?",
 ];
 
+const fireConfetti = () => {
+  const duration = 3000;
+  const end = Date.now() + duration;
+
+  const colors = ["#1C6EF2", "#22c55e", "#f59e0b", "#8b5cf6"];
+
+  (function frame() {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors,
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors,
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+};
+
 const Reflection = () => {
   const navigate = useNavigate();
   const { conceptId } = useParams();
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [responses, setResponses] = useState<string[]>(["", "", ""]);
-  const [confidenceBefore] = useState(50); // This would come from the readiness step
+  const [confidenceBefore] = useState(50);
   const [confidenceAfter, setConfidenceAfter] = useState(75);
   const [step, setStep] = useState<"reflection" | "confidence" | "summary">("reflection");
+  const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
+
+  // Fire confetti when entering confidence step and user has improved
+  useEffect(() => {
+    if (step === "confidence" && confidenceAfter > confidenceBefore && !hasTriggeredConfetti) {
+      setTimeout(() => {
+        fireConfetti();
+        setHasTriggeredConfetti(true);
+      }, 500);
+    }
+  }, [step, confidenceAfter, confidenceBefore, hasTriggeredConfetti]);
 
   const handleResponseChange = (value: string) => {
     const newResponses = [...responses];
@@ -35,6 +75,8 @@ const Reflection = () => {
 
   const handleConfidenceSubmit = () => {
     setStep("summary");
+    // Fire confetti again on summary
+    setTimeout(() => fireConfetti(), 300);
   };
 
   const handleComplete = () => {

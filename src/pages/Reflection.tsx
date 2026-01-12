@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight, MessageSquare, TrendingUp, CheckCircle2, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
 import BrandLogo from "@/components/BrandLogo";
+import ConfidenceSlider from "@/components/learning/ConfidenceSlider";
 
 const reflectionPrompts = [
   "What did you think about inertia before this lesson?",
@@ -178,24 +179,7 @@ const Reflection = () => {
               </div>
 
               <div className="space-y-8">
-                <div className="space-y-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={confidenceAfter}
-                    onChange={(e) => setConfidenceAfter(parseInt(e.target.value))}
-                    className="w-full h-3 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
-                    style={{
-                      background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${confidenceAfter}%, hsl(var(--muted)) ${confidenceAfter}%, hsl(var(--muted)) 100%)`,
-                    }}
-                  />
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Not confident</span>
-                    <span className="font-semibold text-primary text-lg">{confidenceAfter}%</span>
-                    <span className="text-muted-foreground">Very confident</span>
-                  </div>
-                </div>
+                <ConfidenceSlider value={confidenceAfter} onChange={setConfidenceAfter} />
 
                 {/* Before/After Comparison */}
                 <div className="bg-gradient-to-r from-muted/50 to-green-50 rounded-xl p-6">

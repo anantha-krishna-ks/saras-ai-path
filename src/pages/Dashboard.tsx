@@ -75,7 +75,7 @@ const Dashboard = () => {
   const { toast } = useToast();
 
   // Get username from localStorage
-  const username = localStorage.getItem("username") || "Student";
+  const username = localStorage.getItem("username") || "Learner";
   const userInitials = username.slice(0, 2).toUpperCase();
 
   const handleSubjectClick = (subjectId: string) => {

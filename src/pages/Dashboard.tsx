@@ -203,23 +203,23 @@ const Dashboard = () => {
           </div>
           <div className="bg-white rounded-xl p-4 border border-border/50 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-green-600" />
+              <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-amber-600" />
               </div>
               <div>
-                <p className="text-2xl font-semibold text-foreground">4</p>
-                <p className="text-xs text-muted-foreground">Day streak</p>
+                <p className="text-2xl font-semibold text-foreground">3</p>
+                <p className="text-xs text-muted-foreground">Chapters in progress</p>
               </div>
             </div>
           </div>
           <div className="bg-white rounded-xl p-4 border border-border/50 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-amber-600" />
+              <div className="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-rose-600" />
               </div>
               <div>
-                <p className="text-2xl font-semibold text-foreground">2.5h</p>
-                <p className="text-xs text-muted-foreground">This week</p>
+                <p className="text-2xl font-semibold text-foreground">5</p>
+                <p className="text-xs text-muted-foreground">Topics to review</p>
               </div>
             </div>
           </div>

@@ -140,12 +140,22 @@ const Dashboard = () => {
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
-          <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-2">
-            {greeting}, Ananya! 👋
-          </h1>
-          <p className="text-muted-foreground">
-            Ready to continue your learning journey?
-          </p>
+          <div className="bg-white rounded-2xl p-6 border border-border/50 shadow-sm flex items-center gap-4">
+            <Avatar className="h-14 w-14 border-2 border-primary/20">
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold text-lg">
+                AS
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground">
+                {greeting}, Ananya! 👋
+              </h1>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                <Clock className="w-4 h-4" />
+                <span>Last seen: 12 Jan 2026, 09:45 AM</span>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Continue Learning Card */}

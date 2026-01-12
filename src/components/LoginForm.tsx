@@ -44,6 +44,9 @@ const LoginForm = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsLoading(false);
 
+    // Store username for personalization
+    localStorage.setItem("username", username);
+
     toast({
       title: "Welcome back! 🎉",
       description: "You've successfully logged in to Saras School AI Learner.",

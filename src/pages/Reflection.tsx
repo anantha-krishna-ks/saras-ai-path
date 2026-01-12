@@ -242,19 +242,36 @@ const Reflection = () => {
                   <Sparkles className="w-5 h-5 text-primary" />
                   <span className="font-semibold text-foreground">Understanding Level</span>
                 </div>
-                <div className="flex justify-center gap-1 mb-2">
+                <div className="flex justify-center gap-2 mb-4">
                   {[1, 2, 3, 4, 5].map((level) => (
-                    <div
+                    <motion.div
                       key={level}
-                      className={`w-8 h-8 rounded-lg ${
-                        level <= 4 ? "bg-primary" : "bg-muted"
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.3 + level * 0.1, type: "spring", stiffness: 200 }}
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-sm ${
+                        level <= 4 
+                          ? "bg-gradient-to-br from-primary to-primary/80 text-white" 
+                          : "bg-muted/60 text-muted-foreground"
                       }`}
-                    />
+                    >
+                      {level <= 4 ? (
+                        <span className="text-lg">⭐</span>
+                      ) : (
+                        <span className="text-lg opacity-40">☆</span>
+                      )}
+                    </motion.div>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
                   Strong understanding — ready for the next concept!
-                </p>
+                </motion.div>
               </div>
 
               {/* What's Next */}

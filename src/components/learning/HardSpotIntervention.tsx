@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, Lightbulb, RefreshCw, CheckCircle2, ArrowRight } from "lucide-react";
+import ConfidenceSlider from "./ConfidenceSlider";
 
 interface HardSpotInterventionProps {
   onComplete: (needsIntervention: boolean) => void;
@@ -116,25 +117,8 @@ const HardSpotIntervention = ({ onComplete }: HardSpotInterventionProps) => {
                   ))}
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-border/50">
-                  <label className="text-sm font-medium text-foreground">
-                    How confident are you?
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={confidence}
-                    onChange={(e) => setConfidence(parseInt(e.target.value))}
-                    className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
-                    style={{
-                      background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${confidence}%, hsl(var(--muted)) ${confidence}%, hsl(var(--muted)) 100%)`,
-                    }}
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Not sure</span>
-                    <span>Very confident</span>
-                  </div>
+                <div className="pt-4 border-t border-border/50">
+                  <ConfidenceSlider value={confidence} onChange={setConfidence} />
                 </div>
 
                 <button

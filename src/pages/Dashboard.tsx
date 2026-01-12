@@ -74,14 +74,19 @@ const Dashboard = () => {
 
   const { toast } = useToast();
 
+  // Get username from localStorage
+  const username = localStorage.getItem("username") || "Student";
+  const userInitials = username.slice(0, 2).toUpperCase();
+
   const handleSubjectClick = (subjectId: string) => {
     navigate(`/subject/${subjectId}`);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("username");
     toast({
       title: "Logged out successfully",
-      description: "See you next time, Ananya!",
+      description: `See you next time, ${username}!`,
     });
     navigate("/");
   };
@@ -97,7 +102,7 @@ const Dashboard = () => {
               <button className="focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-full transition-all hover:scale-105">
                 <Avatar className="h-10 w-10 cursor-pointer border-2 border-transparent hover:border-primary/30 transition-all">
                   <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
-                    AS
+                    {userInitials}
                   </AvatarFallback>
                 </Avatar>
               </button>
@@ -105,8 +110,8 @@ const Dashboard = () => {
             <DropdownMenuContent align="end" className="w-56 bg-white shadow-lg border border-border/50">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium text-foreground">Ananya Sharma</p>
-                  <p className="text-xs text-muted-foreground">ananya@school.edu</p>
+                  <p className="text-sm font-medium text-foreground">{username}</p>
+                  <p className="text-xs text-muted-foreground">{username.toLowerCase().replace(/\s/g, '')}@school.edu</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -143,12 +148,12 @@ const Dashboard = () => {
           <div className="bg-white rounded-2xl p-6 border border-border/50 shadow-sm flex items-center gap-4">
             <Avatar className="h-14 w-14 border-2 border-primary/20">
               <AvatarFallback className="bg-primary/10 text-primary font-semibold text-lg">
-                AS
+                {userInitials}
               </AvatarFallback>
             </Avatar>
             <div>
               <h1 className="text-xl md:text-2xl font-semibold text-foreground">
-                {greeting}, Ananya! 👋
+                {greeting}, {username}! 👋
               </h1>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                 <Clock className="w-4 h-4" />

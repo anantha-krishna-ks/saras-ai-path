@@ -172,7 +172,7 @@ const LearningContent = () => {
               {modes.map((mode) => (
                 <motion.div
                   key={mode.id}
-                  className="relative group"
+                  className="relative"
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -222,19 +222,6 @@ const LearningContent = () => {
                       />
                     )}
                   </button>
-                  
-                  {/* Fullscreen button overlay */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openFullscreen(mode.id);
-                    }}
-                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/80 hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity border border-border/50"
-                    style={{ opacity: activeMode === mode.id ? 1 : undefined }}
-                    aria-label={`Open ${mode.name} in fullscreen`}
-                  >
-                    <Maximize2 className="w-3.5 h-3.5 text-muted-foreground" />
-                  </button>
                 </motion.div>
               ))}
             </div>
@@ -248,8 +235,16 @@ const LearningContent = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl border border-border/50 shadow-sm p-8 min-h-[400px] flex flex-col"
+              className="bg-white rounded-2xl border border-border/50 shadow-sm p-8 min-h-[400px] flex flex-col relative"
             >
+              {/* Fullscreen button - positioned in top right of content panel */}
+              <button
+                onClick={() => openFullscreen(activeMode)}
+                className="absolute top-4 right-4 p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors z-10"
+                aria-label="Open in fullscreen"
+              >
+                <Maximize2 className="w-4 h-4 text-muted-foreground" />
+              </button>
               {activeMode === "comic" && (
                 <>
                   <div className="flex items-center justify-between mb-6">

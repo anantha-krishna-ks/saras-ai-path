@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen, PlayCircle, Layers, CreditCard, ChevronRight, ChevronLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen, PlayCircle, Layers, CreditCard, ChevronRight, ChevronLeft, CheckCircle2, Maximize2 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import HardSpotIntervention from "@/components/learning/HardSpotIntervention";
 import EmbeddedAssessment from "@/components/learning/EmbeddedAssessment";
+import FullscreenLearningModal from "@/components/learning/FullscreenLearningModal";
 
 type ContentMode = "comic" | "video" | "activity" | "flashcards";
 
@@ -57,6 +58,7 @@ const LearningContent = () => {
   const [showHardSpot, setShowHardSpot] = useState(false);
   const [showAssessment, setShowAssessment] = useState(false);
   const [completedSlides, setCompletedSlides] = useState<number[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const modes = [
     { id: "comic" as ContentMode, name: "Story", icon: BookOpen, emoji: "📖", description: "Visual narrative", recommended: true },
@@ -96,6 +98,26 @@ const LearningContent = () => {
   const handleAssessmentComplete = () => {
     setShowAssessment(false);
     navigate(`/reflection/${conceptId}`);
+  };
+
+  const handleFullscreenSlideChange = (index: number) => {
+    if (!completedSlides.includes(currentSlide) && index > currentSlide) {
+      setCompletedSlides([...completedSlides, currentSlide]);
+    }
+    setCurrentSlide(index);
+  };
+
+  const handleFullscreenComplete = () => {
+    if (!completedSlides.includes(currentSlide)) {
+      setCompletedSlides([...completedSlides, currentSlide]);
+    }
+    setIsFullscreen(false);
+    setShowHardSpot(true);
+  };
+
+  const openFullscreen = (mode: ContentMode) => {
+    setActiveMode(mode);
+    setIsFullscreen(true);
   };
 
   const progress = ((completedSlides.length) / comicSlides.length) * 100;
@@ -143,58 +165,77 @@ const LearningContent = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <p className="text-sm text-muted-foreground mb-3 font-medium">Choose how you'd like to learn:</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm text-muted-foreground font-medium">Choose how you'd like to learn:</p>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {modes.map((mode) => (
-                <motion.button
+                <motion.div
                   key={mode.id}
-                  onClick={() => setActiveMode(mode.id)}
+                  className="relative group"
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`relative flex flex-col items-center gap-2 p-4 rounded-xl transition-all duration-200 ${
-                    activeMode === mode.id
-                      ? "bg-primary/10 border-2 border-primary shadow-md"
-                      : "bg-white border-2 border-border/50 hover:border-primary/30 hover:shadow-sm"
-                  }`}
                 >
-                  {/* Recommended badge */}
-                  {mode.recommended && (
-                    <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                      ✨ Best
-                    </span>
-                  )}
-                  
-                  {/* Emoji icon */}
-                  <motion.span 
-                    className="text-2xl"
-                    animate={activeMode === mode.id ? { scale: [1, 1.2, 1] } : {}}
-                    transition={{ duration: 0.3 }}
+                  <button
+                    onClick={() => setActiveMode(mode.id)}
+                    className={`w-full relative flex flex-col items-center gap-2 p-4 rounded-xl transition-all duration-200 ${
+                      activeMode === mode.id
+                        ? "bg-primary/10 border-2 border-primary shadow-md"
+                        : "bg-white border-2 border-border/50 hover:border-primary/30 hover:shadow-sm"
+                    }`}
                   >
-                    {mode.emoji}
-                  </motion.span>
+                    {/* Recommended badge */}
+                    {mode.recommended && (
+                      <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                        ✨ Best
+                      </span>
+                    )}
+                    
+                    {/* Emoji icon */}
+                    <motion.span 
+                      className="text-2xl"
+                      animate={activeMode === mode.id ? { scale: [1, 1.2, 1] } : {}}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {mode.emoji}
+                    </motion.span>
+                    
+                    {/* Name */}
+                    <span className={`text-sm font-semibold ${
+                      activeMode === mode.id ? "text-primary" : "text-foreground"
+                    }`}>
+                      {mode.name}
+                    </span>
+                    
+                    {/* Description */}
+                    <span className="text-[11px] text-muted-foreground">
+                      {mode.description}
+                    </span>
+                    
+                    {/* Active indicator */}
+                    {activeMode === mode.id && (
+                      <motion.div
+                        layoutId="activeMode"
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </button>
                   
-                  {/* Name */}
-                  <span className={`text-sm font-semibold ${
-                    activeMode === mode.id ? "text-primary" : "text-foreground"
-                  }`}>
-                    {mode.name}
-                  </span>
-                  
-                  {/* Description */}
-                  <span className="text-[11px] text-muted-foreground">
-                    {mode.description}
-                  </span>
-                  
-                  {/* Active indicator */}
-                  {activeMode === mode.id && (
-                    <motion.div
-                      layoutId="activeMode"
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
+                  {/* Fullscreen button overlay */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openFullscreen(mode.id);
+                    }}
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/80 hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity border border-border/50"
+                    style={{ opacity: activeMode === mode.id ? 1 : undefined }}
+                    aria-label={`Open ${mode.name} in fullscreen`}
+                  >
+                    <Maximize2 className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -362,6 +403,18 @@ const LearningContent = () => {
           </div>
         </aside>
       </div>
+
+      {/* Fullscreen Modal */}
+      <FullscreenLearningModal
+        isOpen={isFullscreen}
+        onClose={() => setIsFullscreen(false)}
+        mode={activeMode}
+        slides={comicSlides}
+        currentSlide={currentSlide}
+        onSlideChange={handleFullscreenSlideChange}
+        completedSlides={completedSlides}
+        onComplete={handleFullscreenComplete}
+      />
     </div>
   );
 };

@@ -391,12 +391,7 @@ const LearningReadiness = () => {
             }`}
           >
             {step === "questions" && currentQuestion === priorKnowledgeQuestions.length - 1 ? "Start Learning" : "Continue"}
-            <motion.div
-              animate={{ x: [0, 4, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-            >
-              <ArrowRight className="w-4 h-4" />
-            </motion.div>
+            <ArrowRight className="w-4 h-4" />
           </motion.button>
         </div>
       </main>

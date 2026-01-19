@@ -46,7 +46,7 @@ const priorKnowledgeQuestions: Question[] = [
 const LearningReadiness = () => {
   const navigate = useNavigate();
   const { subjectId } = useParams();
-  const [step, setStep] = useState<"why" | "questions" | "confidence">("why");
+  const [step, setStep] = useState<"confidence" | "why" | "questions">("confidence");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [confidence, setConfidence] = useState(50);
@@ -56,35 +56,35 @@ const LearningReadiness = () => {
   };
 
   const handleNext = () => {
-    if (step === "why") {
+    if (step === "confidence") {
+      setStep("why");
+    } else if (step === "why") {
       setStep("questions");
     } else if (step === "questions") {
       if (currentQuestion < priorKnowledgeQuestions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
-        setStep("confidence");
+        navigate(`/concept-map/${subjectId}`);
       }
-    } else {
-      navigate(`/concept-map/${subjectId}`);
     }
   };
 
   const handleBack = () => {
-    if (step === "why") {
+    if (step === "confidence") {
       navigate("/dashboard");
+    } else if (step === "why") {
+      setStep("confidence");
     } else if (step === "questions") {
       if (currentQuestion > 0) {
         setCurrentQuestion(currentQuestion - 1);
       } else {
         setStep("why");
       }
-    } else {
-      setStep("questions");
-      setCurrentQuestion(priorKnowledgeQuestions.length - 1);
     }
   };
 
   const canProceed = () => {
+    if (step === "confidence") return true;
     if (step === "why") return true;
     if (step === "questions") return answers[priorKnowledgeQuestions[currentQuestion].id] !== undefined;
     return true;
@@ -110,14 +110,14 @@ const LearningReadiness = () => {
       {/* Progress Indicator */}
       <div className="max-w-4xl mx-auto px-6 pt-6">
         <div className="flex items-center gap-2">
-          <div className={`h-1.5 flex-1 rounded-full ${step === "why" || step === "questions" || step === "confidence" ? "bg-primary" : "bg-muted"}`} />
-          <div className={`h-1.5 flex-1 rounded-full ${step === "questions" || step === "confidence" ? "bg-primary" : "bg-muted"}`} />
-          <div className={`h-1.5 flex-1 rounded-full ${step === "confidence" ? "bg-primary" : "bg-muted"}`} />
+          <div className={`h-1.5 flex-1 rounded-full ${step === "confidence" || step === "why" || step === "questions" ? "bg-primary" : "bg-muted"}`} />
+          <div className={`h-1.5 flex-1 rounded-full ${step === "why" || step === "questions" ? "bg-primary" : "bg-muted"}`} />
+          <div className={`h-1.5 flex-1 rounded-full ${step === "questions" ? "bg-primary" : "bg-muted"}`} />
         </div>
         <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+          <span>Confidence</span>
           <span>Why learn this?</span>
           <span>Quick check</span>
-          <span>Confidence</span>
         </div>
       </div>
 
@@ -315,7 +315,7 @@ const LearningReadiness = () => {
                 : "bg-muted text-muted-foreground cursor-not-allowed"
             }`}
           >
-            {step === "confidence" ? "Start Learning" : "Continue"}
+            {step === "questions" && currentQuestion === priorKnowledgeQuestions.length - 1 ? "Start Learning" : "Continue"}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
